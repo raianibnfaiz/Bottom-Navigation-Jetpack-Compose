@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.raian.myapplication.model.Pet
 import com.raian.myapplication.ui.theme.BottomNavigationJetpackComposeTheme
 
 
@@ -28,6 +29,9 @@ sealed class Destination(val route: String){
 
     object Detail: Destination("detail/{elementId}")
     fun createRoute(id:Int) = "detail/${id}"
+
+    object Animal: Destination("pet/{animalId}")
+    fun animalRoute(id:Int) = "pet/${id}"
 }
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +88,7 @@ fun Notifications() {
 }
 
 @Composable
-fun Settings() {
+fun Settings(navigateToProfile: (Pet) -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -127,8 +131,8 @@ fun NavigationController(navController: NavHostController) {
             Home()
         }
 
-        composable(NavigationItem.Notifications.route) {
-            Notifications()
+        composable(NavigationItem.PetScreen.route) {
+            PetScreen(navController)
         }
 
         composable(NavigationItem.Settings.route) {
@@ -147,7 +151,16 @@ fun NavigationController(navController: NavHostController) {
                 Detail(elementId = elementId.toInt())
             }
         }
-
+        composable(Destination.Animal.route){
+            navBackStackEntry ->
+            val animal = navBackStackEntry.arguments?.getString("animalId")
+            if(animal == null){
+                Toast.makeText(context, "Element id is required", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                PetDetail(elementId = animal.toInt())
+            }
+        }
     }
 
 
@@ -161,7 +174,7 @@ fun Navigation() {
     val items = listOf(
         NavigationItem.Home,
         NavigationItem.Settings,
-        NavigationItem.Notifications,
+        NavigationItem.PetScreen,
         NavigationItem.Profile
     )
 

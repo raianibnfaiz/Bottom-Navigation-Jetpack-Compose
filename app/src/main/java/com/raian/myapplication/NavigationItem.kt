@@ -6,11 +6,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class NavigationItem(val route: String, val label: String, val icons: ImageVector){
     object Home : NavigationItem("home", "Home", Icons.Default.Home)
-    object Notifications :
-        NavigationItem("notifications", "Notifications", Icons.Default.Notifications)
+    object PetScreen :
+        NavigationItem("pet", "Pet", Icons.Default.Face)
 
     object Profile: NavigationItem("profile","Profile",Icons.Default.AccountCircle)
-    
+
     object Settings : NavigationItem("setting","Settings",Icons.Default.Settings)
     fun createRoute(id:Int) = "detail/${id}"
 }
